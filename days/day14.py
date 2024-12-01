@@ -1,4 +1,5 @@
 from .day import Day
+from .day10 import dense_hash
 
 
 class Day14(Day):
@@ -6,7 +7,11 @@ class Day14(Day):
         super().__init__(*args, **kwargs)
 
     def part1(self) -> str:
-        return "dayXX 1"
+        in_val = self.data_lines()[0]
+        hashes = [dense_hash(f"{in_val}-{i}") for i in range(128)]
+        return str(sum(int(h, 16).bit_count() for h in hashes))
 
     def part2(self) -> str:
+        in_val = self.data_lines()[0]
+        hashes = [dense_hash(f"{in_val}-{i}") for i in range(128)]
         return "dayXX 2"
