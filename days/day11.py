@@ -1,21 +1,25 @@
 from .day import Day
-from collections import Counter, namedtuple
+from collections import Counter
+from dataclasses import dataclass
 
 
-Pos = namedtuple('Pos', ('x', 'y'))
+@dataclass
+class Pos:
+    x: int
+    y: int
+
+    def dist(self) -> int:
+        # calc distance
+        x, y = abs(self.x), abs(self.y)
+        if x > y:
+            return x
+        return x + (y-x)//2
 
 
 class Day11(Day):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-    def part1(self) -> str:
-        steps = Counter(['ne','ne','ne'])
-        steps = Counter(['ne','ne','sw','sw'])
-        steps = Counter(['ne','ne','s','s'])
-        steps = Counter(['se','sw','se','sw','sw'] * 1)
-        steps = Counter(self.data_lines()[0].split(','))
-        dirs: dict[str, Pos] = dict(
+        self.dirs: dict[str, Pos] = dict(
             se=Pos(1, -1),
             ne=Pos(1, 1),
             sw=Pos(-1, -1),
@@ -23,12 +27,25 @@ class Day11(Day):
             n=Pos(0, 2),
             s=Pos(0, -2),
         )
+
+    def part1(self) -> str:
+        steps = Counter(self.data_lines()[0].split(','))
         pos = Pos(0, 0)
         for direction, count in steps.items():
-            delta = dirs[direction]
-            pos = Pos(pos.x + delta.x * count, pos.y + delta.y * count)
-        print(pos)
-        return str((abs(pos.x) + abs(pos.y))//2)
+            delta = self.dirs[direction]
+            pos.x += delta.x * count
+            pos.y += delta.y * count
+        # calc distance
+        return str(pos.dist())
 
     def part2(self) -> str:
-        return "dayXX 2"
+        steps = self.data_lines()[0].split(',')
+        pos = Pos(0, 0)
+        max_dist = 0
+        for direction in steps:
+            delta = self.dirs[direction]
+            pos.x += delta.x
+            pos.y += delta.y
+            max_dist = max(max_dist, pos.dist())
+        # calc distance
+        return str(max_dist)
