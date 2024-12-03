@@ -20,4 +20,4 @@ class Day:
             return f.read()
 
     def data_lines(self) -> list[str]:
-        return self.data().strip().splitlines()
+        return self.data().rstrip().splitlines()
